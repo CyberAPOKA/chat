@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import Footer from '@/Components/Footer.vue';
 import PencilSvg from '@/Svgs/PencilSvg.vue';
+import Button from "primevue/button"
 
 const props = defineProps({
     conversations: Array
@@ -36,9 +37,9 @@ const loadConversation = (id) => {
         <div class="w-full xl:w-fit flex">
             <!-- Config bar -->
             <div class="hidden xl:flex flex-col gap-4 p-6 bg-gray-100">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
+                <Button label="Check" icon="pi pi-check" />
+                <Button label="Check" icon="pi pi-check" />
+                <Button label="Check" icon="pi pi-check" />
             </div>
             <div class="bg-white border-r border-gray-300 w-full xl:w-96">
 

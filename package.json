@@ -20,7 +20,10 @@
         "vue": "^3.3.13"
     },
     "dependencies": {
+        "@primevue/themes": "^4.0.5",
         "@vueuse/motion": "^2.2.3",
-        "font-awesome": "^4.7.0"
+        "font-awesome": "^4.7.0",
+        "primeicons": "^7.0.0",
+        "primevue": "^4.0.5"
     }
 }
