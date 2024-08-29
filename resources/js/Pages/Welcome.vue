@@ -2,8 +2,9 @@
 import { ref } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import Footer from '@/Components/Footer.vue';
-import PencilSvg from '@/Svgs/PencilSvg.vue';
 import Button from "primevue/button"
+import Popover from 'primevue/popover';
+import Contacts from '@/Components/Contacts.vue';
 
 const props = defineProps({
     conversations: Array
@@ -28,6 +29,11 @@ const loadConversation = (id) => {
             // sempre será executado
         });
 };
+
+const toggleContacts = (event) => {
+    showContacts.value.toggle(event);
+}
+
 </script>
 
 <template>
@@ -37,9 +43,9 @@ const loadConversation = (id) => {
         <div class="w-full xl:w-fit flex">
             <!-- Config bar -->
             <div class="hidden xl:flex flex-col gap-4 p-6 bg-gray-100">
-                <Button label="Check" icon="pi pi-check" />
-                <Button label="Check" icon="pi pi-check" />
-                <Button label="Check" icon="pi pi-check" />
+                <Button label="1" icon="pi pi-check" />
+                <Button label="2" icon="pi pi-check" />
+                <Button label="3" icon="pi pi-check" />
             </div>
             <div class="bg-white border-r border-gray-300 w-full xl:w-96">
 
@@ -47,15 +53,12 @@ const loadConversation = (id) => {
                 <header class="p-4 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white">
                     <h1 class="text-2xl font-semibold">Chats</h1>
                     <div class="flex gap-2">
-                        <button>
-                            <PencilSvg @click="showContacts = true" />
-                        </button>
-                        <i class="fa-solid fa-bars"></i>
+                        <Button icon="pi pi-pencil" @click="toggleContacts" />
                     </div>
                 </header>
-                <div class="" v-if="showContacts">
-                    
-                </div>
+                <Popover ref="showContacts">
+                    <Contacts />
+                </Popover>
 
                 <!-- Contact List -->
                 <div class="overflow-y-auto h-screen p-2 mb-9 pb-20" v-motion-slide-right>

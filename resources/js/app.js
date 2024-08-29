@@ -22,12 +22,17 @@ createInertiaApp({
             .use(MotionPlugin)
             .use(PrimeVue, {
                 theme: {
-                    preset: Aura
+                    preset: Aura,
+                    options: {
+                        cssLayer: {
+                            darkModeSelector: '.my-app-dark',
+                        }
+                    }
                 }
-            })            
+            })
             .mount(el);
-},
+    },
     progress: {
-    color: '#4B5563',
-},
+        color: '#4B5563',
+    },
 });
