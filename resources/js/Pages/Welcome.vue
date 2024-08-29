@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import Footer from '@/Components/Footer.vue';
+import Footer from '@/Layouts/Footer.vue';
+import ConfigBar from '@/Layouts/ConfigBar.vue';
 import Button from "primevue/button"
 import Popover from 'primevue/popover';
 import Contacts from '@/Components/Contacts.vue';
@@ -9,6 +10,11 @@ import Contacts from '@/Components/Contacts.vue';
 const props = defineProps({
     conversations: Array
 });
+// const currentTheme = ref('light'); 
+// const toggleTheme = () => {
+//     currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
+//     document.documentElement.setAttribute('data-theme', currentTheme.value);
+// };
 const page = usePage();
 const userId = ref(page.props.auth.user.id);
 const selectedConversation = ref(null);
@@ -33,20 +39,16 @@ const loadConversation = (id) => {
 const toggleContacts = (event) => {
     showContacts.value.toggle(event);
 }
-
 </script>
 
 <template>
+
     <div class="flex h-screen overflow-hidden">
 
         <!-- Sidebar -->
         <div class="w-full xl:w-fit flex">
             <!-- Config bar -->
-            <div class="hidden xl:flex flex-col gap-4 p-6 bg-gray-100">
-                <Button label="1" icon="pi pi-check" />
-                <Button label="2" icon="pi pi-check" />
-                <Button label="3" icon="pi pi-check" />
-            </div>
+            <ConfigBar />
             <div class="bg-white border-r border-gray-300 w-full xl:w-96">
 
                 <!-- Sidebar Header -->
@@ -56,7 +58,7 @@ const toggleContacts = (event) => {
                         <Button icon="pi pi-pencil" @click="toggleContacts" />
                     </div>
                 </header>
-                <Popover ref="showContacts">
+                <Popover ref="showContacts" class="!bg-[--surface-0]">
                     <Contacts />
                 </Popover>
 
@@ -114,6 +116,7 @@ const toggleContacts = (event) => {
             </div>
 
             <Footer v-if="selectedConversation" />
+
         </div>
     </div>
 </template>

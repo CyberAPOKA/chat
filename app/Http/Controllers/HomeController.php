@@ -20,7 +20,7 @@ class HomeController extends Controller
             $query->latest()->first(); // Carrega apenas a última mensagem de cada conversa para o preview
         }])->whereHas('users', function ($query) use ($user) {
             $query->where('user_id', $user->id);
-        })->take(5)->get();
+        })->take(20)->get();
 
         // dd($conversations);
 

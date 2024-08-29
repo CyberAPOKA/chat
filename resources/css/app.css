@@ -13,3 +13,37 @@
 [x-cloak] {
     display: none;
 }
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #EEF0F8;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3699FF;
+    border-radius: 15px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #187DE4;
+}
+
+.scroll-box::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scroll-box::-webkit-scrollbar-track {
+    background: #EEF0F8;
+}
+
+.scroll-box::-webkit-scrollbar-thumb {
+    background: #3699FF;
+}
+
+.scroll-box::-webkit-scrollbar-thumb:hover {
+    background: #187DE4;
+}

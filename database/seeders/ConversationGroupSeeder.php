@@ -16,8 +16,15 @@ class ConversationGroupSeeder extends Seeder
         $faker = Faker::create();
         $user1 = User::find(1); // Eu
 
+        // Cria 10 conversas individuais (1 pra 1)
+        $createdUsers = [];
+
         for ($i = 1; $i <= 10; $i++) {
-            $randomUser = User::inRandomOrder()->where('id', '!=', 1)->first();
+            do {
+                $randomUser = User::inRandomOrder()->where('id', '!=', $user1->id)->first();
+            } while (in_array($randomUser->id, $createdUsers));
+
+            $createdUsers[] = $randomUser->id; // Evita duplicações
 
             $conversation = Conversation::create([
                 'is_group' => false,
@@ -34,22 +41,22 @@ class ConversationGroupSeeder extends Seeder
             }
         }
 
-        // Cria 5 grupos com 5 usuários aleatórios
+        // Cria 5 grupos com 3 a 5 usuários aleatórios
         for ($i = 1; $i <= 5; $i++) {
             $groupUsers = User::inRandomOrder()->limit(rand(3, 5))->pluck('id')->toArray();
             $groupName = 'Group ' . $i;
-            
+
             $conversation = Conversation::create([
                 'name' => $groupName,
                 'is_group' => true,
             ]);
 
-            $group = Group::create([
+            Group::create([
                 'name' => $groupName,
                 'conversation_id' => $conversation->id,
             ]);
 
-            // Adiciona o usuário com ID 1 (eu) ao grupo e outros usuários aleatórios
+            // Adiciona eu e outros usuários aleatórios ao grupo
             $conversation->users()->attach(array_merge([$user1->id], $groupUsers));
 
             for ($j = 1; $j <= 5; $j++) {
