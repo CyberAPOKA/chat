@@ -13,21 +13,23 @@ class HomeController extends Controller
     {
         $user = Auth::user();
 
-        // Carrega somente as 5 primeiras conversas do usuário logado com a última mensagem
         $conversations = Conversation::with(['users' => function ($query) use ($user) {
             $query->where('user_id', '!=', $user->id); // Carrega apenas os outros usuários
-        }, 'messages' => function ($query) {
-            $query->latest()->first(); // Carrega apenas a última mensagem de cada conversa para o preview
-        }])->whereHas('users', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->take(20)->get();
-
-        // dd($conversations);
+        }])
+            ->whereHas('users', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->with(['messages' => function ($query) {
+                $query->latest()->take(1); // Carrega apenas a última mensagem de cada conversa
+            }])
+            ->take(20)
+            ->get();
 
         return Inertia::render('Welcome', [
             'conversations' => $conversations
         ]);
     }
+
 
     public function loadConversation($id)
     {
@@ -37,7 +39,7 @@ class HomeController extends Controller
         $conversation = Conversation::with(['users', 'messages' => function ($query) {
             $query->orderBy('created_at', 'asc');
         }])->whereHas('users', function ($query) use ($user) {
-            $query->where('user_id', $user->id); 
+            $query->where('user_id', $user->id);
         })->findOrFail($id);
 
         return response()->json($conversation);

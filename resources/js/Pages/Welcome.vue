@@ -3,42 +3,15 @@ import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import Footer from '@/Layouts/Footer.vue';
 import ConfigBar from '@/Layouts/ConfigBar.vue';
-import Button from "primevue/button"
-import Popover from 'primevue/popover';
-import Contacts from '@/Components/Contacts.vue';
-
+import Sidebar from '@/Layouts/Sidebar.vue';
 const props = defineProps({
     conversations: Array
 });
-// const currentTheme = ref('light'); 
-// const toggleTheme = () => {
-//     currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-//     document.documentElement.setAttribute('data-theme', currentTheme.value);
-// };
+
 const page = usePage();
 const userId = ref(page.props.auth.user.id);
 const selectedConversation = ref(null);
-const showContacts = ref(null);
 
-const loadConversation = (id) => {
-    axios.get(route('load.conversation', id))
-        .then(function (response) {
-            // manipula o sucesso da requisição
-            console.log(response);
-            selectedConversation.value = response.data
-        })
-        .catch(function (error) {
-            // manipula erros da requisição
-            console.error(error);
-        })
-        .finally(function () {
-            // sempre será executado
-        });
-};
-
-const toggleContacts = (event) => {
-    showContacts.value.toggle(event);
-}
 </script>
 
 <template>
@@ -49,40 +22,7 @@ const toggleContacts = (event) => {
         <div class="w-full xl:w-fit flex">
             <!-- Config bar -->
             <ConfigBar />
-            <div class="bg-white border-r border-gray-300 w-full xl:w-96">
-
-                <!-- Sidebar Header -->
-                <header class="p-4 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white">
-                    <h1 class="text-2xl font-semibold">Chats</h1>
-                    <div class="flex gap-2">
-                        <Button icon="pi pi-pencil" @click="toggleContacts" />
-                    </div>
-                </header>
-                <Popover ref="showContacts" class="!bg-[--surface-0]">
-                    <Contacts />
-                </Popover>
-
-                <!-- Contact List -->
-                <div class="overflow-y-auto h-screen p-2 mb-9 pb-20" v-motion-slide-right>
-                    <div v-for="conversation in conversations" :key="conversation.id"
-                        class="flex items-center mb-2 cursor-pointer hover:bg-gray-100 rounded-md p-2"
-                        @click="loadConversation(conversation.id)">
-                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-3">
-                            <img :src="conversation.is_group ? 'path/to/group_default_image.jpg' : conversation?.users?.[0]?.profile_photo_url || ''"
-                                alt="User Avatar" class="w-12 h-12 rounded-full">
-                        </div>
-                        <div class="flex-1 overflow-hidden">
-                            <h2 class="text-lg font-semibold truncate">
-                                {{ conversation.is_group ? conversation.name : conversation?.users?.[0]?.name }}
-                            </h2>
-                            <p class="text-gray-600 truncate max-w-full text-sm">
-                                {{ conversation?.messages?.[0]?.content }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <Sidebar :conversations="conversations" />
         </div>
 
         <!-- Main Chat Area -->
@@ -107,8 +47,7 @@ const toggleContacts = (event) => {
                     </div>
 
                     <!-- Mensagem -->
-                    <div :class="message.user_id === userId ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700'"
-                        class="flex max-w-96 rounded-lg p-3 gap-3">
+                    <div class="flex max-w-96 rounded-lg p-3 gap-3 bg-[--surface-100] text-[--text-color]">
                         <p>{{ message.content }}</p>
                     </div>
 

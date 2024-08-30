@@ -78,4 +78,19 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Group::class, 'group_user')->withTimestamps();
     }
+
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
+    public function contactUsers()
+    {
+        return $this->belongsToMany(User::class, 'contacts', 'user_id', 'contact_id');
+    }
+
+    public function addedBy()
+    {
+        return $this->belongsToMany(User::class, 'contacts', 'contact_id', 'user_id');
+    }
 }

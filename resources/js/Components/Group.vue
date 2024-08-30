@@ -1,6 +1,6 @@
 <script setup>
 import InputMask from 'primevue/inputmask';
-const emit = defineEmits('back');
+const emit = defineEmits(['back']);
 </script>
 
 <template>

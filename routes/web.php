@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests as Precognition;
 
 Route::middleware([
     'auth:sanctum',
@@ -27,4 +29,9 @@ Route::middleware([
 
     Route::get('/', [HomeController::class, 'index'])->name('index');
     Route::get('/load-conversation/{id}', [HomeController::class, 'loadConversation'])->name('load.conversation');
+
+
+    Route::post('/check-user-phone', [ContactController::class, 'checkUserPhone'])->name('check.user.phone');
+    Route::post('/add-contact', [ContactController::class, 'add'])->name('add.contact')->middleware(Precognition::class);
+    Route::get('get-contacts', [ContactController::class, 'getContacts'])->name('get.contacts');
 });

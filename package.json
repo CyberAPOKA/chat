@@ -23,6 +23,7 @@
         "@primevue/themes": "^4.0.5",
         "@vueuse/motion": "^2.2.3",
         "font-awesome": "^4.7.0",
+        "laravel-precognition-vue-inertia": "^0.5.7",
         "primeicons": "^7.0.0",
         "primevue": "^4.0.5"
     }
