@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, nextTick, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useConversationStore } from '@/stores/conversationStore';
 import InputText from 'primevue/inputtext';
@@ -18,7 +18,9 @@ const sendMessage = () => {
         content: newMessage.value
     })
         .then(response => {
-            conversationStore.selectedConversation?.messages.push(response.data);
+            const message = response.data;
+            conversationStore.selectedConversation?.messages.push(message);
+            conversationStore.updateConversationMessage(conversationStore.selectedConversation.id, message); // Atualiza a conversa na sidebar
             newMessage.value = '';
             scrollToBottom(); // Scrolla para o final
         })
@@ -32,12 +34,43 @@ const listenEvents = (conversationId) => {
 
     window.Echo.private(`conversations.${conversationId}`)
         .listen('MessageSent', (data) => {
-            if (data.message.user_id !== userId.value) {
-                conversationStore.selectedConversation.messages.push(data.message);
-                scrollToBottom(); // Scrolla para o final
+            const message = data.message;
+
+            // Atualiza a conversa correspondente na sidebar
+            conversationStore.updateConversationMessage(conversationId, message);
+
+            if (conversationStore.selectedConversation?.id === conversationId) {
+                if (message.user_id !== userId.value) {
+                    conversationStore.selectedConversation.messages.push(message);
+                    scrollToBottom();
+                }
             }
         });
 };
+
+onMounted(() => {
+    // Carrega as conversas ao montar o componente
+    conversationStore.loadConversations().then(() => {
+        conversationStore.conversations.forEach(conversation => {
+            listenEvents(conversation.id);
+        });
+    });
+});
+
+
+onMounted(() => {
+    window.Echo.channel('global')
+        .listen('NameUpdated', (data) => {
+            console.log('data:', data);
+
+            const user = conversationStore.selectedConversation?.users?.find(user => user.id === data.user_id);
+            console.log('user:', user);
+
+            if (user) {
+                user.name = data.name;
+            }
+        });
+});
 
 const scrollToBottom = () => {
     nextTick(() => {
@@ -55,21 +88,28 @@ watch(() => conversationStore.selectedConversation?.messages, () => {
 watch(() => conversationStore.selectedConversation, (newConversation) => {
     if (newConversation) {
         listenEvents(newConversation.id);
-        scrollToBottom(); // Scrolla para o final quando a conversa é carregada
+        scrollToBottom();
     }
 });
 
+const getOtherUser = (conversation) => {
+    return conversation?.users?.find(user => user.id !== userId.value);
+};
 </script>
 
 <template>
     <div class="flex-1 hidden xl:flex xl:flex-col">
         <!-- Chat Header -->
-        <header class="bg-white p-4 text-gray-700" v-if="conversationStore.selectedConversation">
-            <h1 class="text-2xl font-semibold">{{ conversationStore.selectedConversation?.name ||
-                conversationStore.selectedConversation?.users?.[0]?.name }}</h1>
+        <header class="bg-white p-4 text-gray-700 flex items-center gap-4"
+            v-if="conversationStore.selectedConversation">
+            <img :src="getOtherUser(conversationStore.selectedConversation)?.profile_photo_url || '/assets/images/user.png'"
+                alt="User Avatar" class="w-10 h-10 rounded-full">
+            <h1 class="text-2xl font-semibold">
+                {{ getOtherUser(conversationStore.selectedConversation)?.name }}
+            </h1>
         </header>
 
-        <!-- Chat Messages -->
+        <!-- Chat -->
         <div ref="messageContainer" class="h-screen overflow-y-auto p-4 pb-4"
             v-if="conversationStore.selectedConversation">
             <div v-for="(message, index) in conversationStore.selectedConversation?.messages" :key="message.id"
@@ -95,8 +135,9 @@ watch(() => conversationStore.selectedConversation, (newConversation) => {
                     placeholder="Escreva uma mensagem..."
                     class="bg-[--surface-50] text-[--text-color] flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 min-h-12 max-h-96 !overflow-y-auto" />
 
-                <div class="flex items-center"> 
-                    <button @click="sendMessage" :disabled="!newMessage" :class="{'opacity-75 cursor-not-allowed' : !newMessage}"
+                <div class="flex items-center">
+                    <button @click="sendMessage" :disabled="!newMessage"
+                        :class="{ 'opacity-75 cursor-not-allowed': !newMessage }"
                         class="ml-2 bg-[--surface-900] text-[--primary-color] px-4 py-2 rounded-md h-full min-h-12 font-semibold">
                         Enviar
                         <i class="pi pi-send text-[--primary-color]"></i>

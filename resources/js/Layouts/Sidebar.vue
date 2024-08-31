@@ -1,20 +1,29 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useConversationStore } from '@/stores/conversationStore';
 import Button from "primevue/button";
 import Popover from 'primevue/popover';
 import Contacts from '@/Components/Contacts.vue';
 import Individual from '@/Components/Conversations/Individual.vue';
 import Group from '@/Components/Conversations/Group.vue';
 
-const props = defineProps({
-    conversations: Array
-});
-
+const conversationStore = useConversationStore();
 const showContacts = ref(null);
 
 const toggleContacts = (event) => {
     showContacts.value.toggle(event);
-}
+};
+
+onMounted(() => {
+    conversationStore.loadConversations(); // Carrega as conversas ao montar o componente
+
+    window.Echo.channel('global')
+        .listen('ProfilePhotoUpdated', (data) => {
+            if (data.user_id !== conversationStore.userId) {
+                conversationStore.updateProfilePhoto(data.user_id, data.profile_photo_url);
+            }
+        });
+});
 </script>
 <template>
     <div class="bg-[--surface-50] border-r border-[--surface-500] w-full xl:w-96">
@@ -32,7 +41,7 @@ const toggleContacts = (event) => {
 
         <!-- Conversas -->
         <div class="bg-[--surface-50] text-[--text-color] overflow-y-auto h-screen p-2 mb-9 pb-20" v-motion-slide-right>
-            <template v-for="conversation in conversations" :key="conversation.id">
+            <template v-for="conversation in conversationStore.conversations" :key="conversation.id">
                 <template v-if="!conversation.is_group">
                     <Individual :conversation="conversation" />
                 </template>

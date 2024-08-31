@@ -32,6 +32,25 @@ class HomeController extends Controller
         ]);
     }
 
+    public function getConversations()
+    {
+        $user = Auth::user();
+
+        $conversations = Conversation::with(['users' => function ($query) use ($user) {
+            $query->where('user_id', '!=', $user->id); // Carrega apenas os outros usuários
+        }])
+            ->whereHas('users', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->with(['messages' => function ($query) {
+                $query->latest()->take(1); // Carrega apenas a última mensagem de cada conversa
+            }])
+            ->orderBy('updated_at', 'desc')
+            ->take(20)
+            ->get();
+
+        return response()->json($conversations);
+    }
 
     public function loadConversation($id)
     {

@@ -5,6 +5,7 @@ export const useConversationStore = defineStore('conversation', {
     state: () => ({
         contacts: [],
         selectedConversation: null,
+        conversations: []
     }),
     actions: {
         async loadContacts() {
@@ -25,6 +26,40 @@ export const useConversationStore = defineStore('conversation', {
             } catch (error) {
                 console.error('Error loading conversation:', error);
             }
+        },
+        async loadConversations() {
+            try {
+                const response = await axios.get(route('get.conversations'));
+                this.conversations = response.data;
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+            }
+        },
+        updateConversationMessage(conversationId, message) {
+            const conversation = this.conversations.find(c => c.id === conversationId);
+            if (conversation) {
+                // Atualiza a última mensagem e o updated_at
+                conversation.messages[0] = message;
+                conversation.updated_at = message.created_at;
+
+                // Reordena as conversas, movendo a conversa atualizada para o topo
+                this.conversations = this.conversations.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+            }
+        },
+        updateProfilePhoto(userId, profilePhotoUrl) {
+            if (this.selectedConversation) {
+                const user = this.selectedConversation.users.find(user => user.id === userId);
+                if (user) {
+                    user.profile_photo_url = profilePhotoUrl;
+                }
+            }
+            // Atualiza a imagem de perfil em todas as conversas
+            this.conversations.forEach(conversation => {
+                const user = conversation.users.find(user => user.id === userId);
+                if (user) {
+                    user.profile_photo_url = profilePhotoUrl;
+                }
+            });
         }
     },
     getters: {

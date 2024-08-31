@@ -28,6 +28,7 @@
         "laravel-precognition-vue-inertia": "^0.5.7",
         "pinia": "^2.2.2",
         "primeicons": "^7.0.0",
-        "primevue": "^4.0.5"
+        "primevue": "^4.0.5",
+        "vue-cropperjs": "^5.0.0"
     }
 }

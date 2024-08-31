@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,6 +30,7 @@ Route::middleware([
     });
 
     Route::get('/', [HomeController::class, 'index'])->name('index');
+    Route::get('/get-conversations', [HomeController::class, 'getConversations'])->name('get.conversations');
     Route::get('/load-conversation/{id}', [HomeController::class, 'loadConversation'])->name('load.conversation');
     Route::post('/create-conversation', [HomeController::class, 'createConversation'])->name('create.conversation');
 
@@ -38,4 +40,7 @@ Route::middleware([
 
     // nova conversa
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
+
+    Route::post('/user/update/profile/photo', [UserController::class, 'updateProfilePhoto'])->name('update.profile.photo');
+    Route::post('/user/update/name', [UserController::class, 'updateName'])->name('update.name');
 });

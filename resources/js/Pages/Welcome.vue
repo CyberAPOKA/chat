@@ -6,6 +6,7 @@ import Chat from '@/Components/Chat.vue';
 const props = defineProps({
     conversations: Array
 });
+
 </script>
 
 <template>
