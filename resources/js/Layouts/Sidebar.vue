@@ -15,7 +15,7 @@ const toggleContacts = (event) => {
 };
 
 onMounted(() => {
-    conversationStore.loadConversations(); // Carrega as conversas ao montar o componente
+    conversationStore.loadConversations();
 
     window.Echo.channel('global')
         .listen('ProfilePhotoUpdated', (data) => {
@@ -30,7 +30,7 @@ onMounted(() => {
         <!-- Sidebar Header -->
         <header
             class="p-4 border-b border-[--surface-500] flex justify-between items-center bg-[--surface-0] text-[--text-color]">
-            <h1 class="text-2xl font-semibold text-[--text-color]">Chats</h1>
+            <h1 class="text-2xl font-semibold text-[--text-color]">{{ $t('chats') }}</h1>
             <div class="flex gap-2">
                 <Button icon="pi pi-pencil" @click="toggleContacts" />
             </div>

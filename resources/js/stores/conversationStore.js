@@ -11,6 +11,7 @@ export const useConversationStore = defineStore('conversation', {
         async loadContacts() {
             try {
                 const response = await axios.get(route('get.contacts'));
+                console.log('contacts:', response.data);
                 this.contacts = response.data;
             } catch (error) {
                 console.error('Error loading contacts:', error);
@@ -60,7 +61,20 @@ export const useConversationStore = defineStore('conversation', {
                     user.profile_photo_url = profilePhotoUrl;
                 }
             });
-        }
+        },
+        updateUnreadMessages(conversationId) {
+            const conversation = this.conversations.find(c => c.id === conversationId);
+            if (conversation && conversation.id !== this.selectedConversation?.id) {
+                conversation.unreadCount = (conversation.unreadCount || 0) + 1;
+            }
+        },
+
+        resetUnreadMessages(conversationId) {
+            const conversation = this.conversations.find(c => c.id === conversationId);
+            if (conversation) {
+                conversation.unreadCount = 0;
+            }
+        },
     },
     getters: {
         filteredContacts: (state) => (search) => {

@@ -43,4 +43,6 @@ Route::middleware([
 
     Route::post('/user/update/profile/photo', [UserController::class, 'updateProfilePhoto'])->name('update.profile.photo');
     Route::post('/user/update/name', [UserController::class, 'updateName'])->name('update.name');
+    Route::post('/user/create/group', [UserController::class, 'createGroup'])->name('create.group');
+    
 });

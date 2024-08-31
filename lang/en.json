@@ -1,0 +1,15 @@
+{
+    "name": "Name",
+    "new_group": "New Group",
+    "add_contact": "Add Contact",
+    "to_send": "Send",
+    "contact_list": "Contact List",
+    "select_users": "Select users to add",
+    "create_group": "Create Group",
+    "number": "Number",
+    "user_not_found": "User not found",
+    "user_added": "User added",
+    "chats": "Chats",
+    "new_conversation": "New conversation",
+     "search_number_or_name": "Search for name or number"
+}

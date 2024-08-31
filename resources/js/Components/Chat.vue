@@ -44,6 +44,9 @@ const listenEvents = (conversationId) => {
                     conversationStore.selectedConversation.messages.push(message);
                     scrollToBottom();
                 }
+            } else {
+                // Incrementa o contador de mensagens não lidas se a conversa não estiver selecionada
+                conversationStore.updateUnreadMessages(conversationId);
             }
         });
 };
@@ -100,7 +103,7 @@ const getOtherUser = (conversation) => {
 <template>
     <div class="flex-1 hidden xl:flex xl:flex-col">
         <!-- Chat Header -->
-        <header class="bg-white p-4 text-gray-700 flex items-center gap-4"
+        <header class="bg-[--surface-0] p-4 text-[--text-color] flex items-center gap-4"
             v-if="conversationStore.selectedConversation">
             <img :src="getOtherUser(conversationStore.selectedConversation)?.profile_photo_url || '/assets/images/user.png'"
                 alt="User Avatar" class="w-10 h-10 rounded-full">
@@ -128,7 +131,7 @@ const getOtherUser = (conversation) => {
         </div>
 
 
-        <footer class="bg-[--surface-0] border-t border-gray-300 p-4  w-full"
+        <footer class="bg-[--surface-0] border-t border-gray-300 p-4 w-full"
             v-if="conversationStore.selectedConversation">
             <div class="flex justify-center items-center">
                 <Textarea v-model="newMessage" @keyup.enter="sendMessage" rows="1" autoResize
@@ -139,7 +142,7 @@ const getOtherUser = (conversation) => {
                     <button @click="sendMessage" :disabled="!newMessage"
                         :class="{ 'opacity-75 cursor-not-allowed': !newMessage }"
                         class="ml-2 bg-[--surface-900] text-[--primary-color] px-4 py-2 rounded-md h-full min-h-12 font-semibold">
-                        Enviar
+                        {{ $t('to_send') }}
                         <i class="pi pi-send text-[--primary-color]"></i>
                     </button>
                 </div>

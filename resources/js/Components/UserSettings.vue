@@ -5,6 +5,7 @@ import Popover from 'primevue/popover';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import ImageCropper from '@/Components/ImageCropper.vue';
 import InputText from 'primevue/inputtext';
+import Language from './Language.vue';
 
 const page = usePage();
 
@@ -65,11 +66,15 @@ const updateName = () => {
                         </ImageCropper>
                     </div>
                 </div>
-                <InputText v-if="isEditing" v-model="name" @blur="updateName" class="!bg-[--surface-50] !text-[--text-color] font-semibold" />
+                <InputText v-if="isEditing" v-model="name" @blur="updateName"
+                    class="!bg-[--surface-50] !text-[--text-color] font-semibold" />
                 <div v-else class="flex justify-between items-center">
-                    <h1 class="font-bold text-lg text-[--text-color] user-name" :data-user-id="page.props.auth.user.id">{{ name }}</h1>
-                    <i class="pi pi-pencil text-lg text-[--text-color] hover:cursor-pointer" @click="isEditing = !isEditing"></i>
+                    <h1 class="font-bold text-lg text-[--text-color] user-name" :data-user-id="page.props.auth.user.id">
+                        {{ name }}</h1>
+                    <i class="pi pi-pencil text-lg text-[--text-color] hover:cursor-pointer"
+                        @click="isEditing = !isEditing"></i>
                 </div>
+                <Language />
             </div>
         </Popover>
     </div>

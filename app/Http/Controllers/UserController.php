@@ -6,6 +6,7 @@ use App\Events\NameUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Events\ProfilePhotoUpdated;
+use App\Models\Conversation;
 use Faker\Guesser\Name;
 
 class UserController extends Controller
@@ -41,5 +42,27 @@ class UserController extends Controller
         broadcast(new NameUpdated($user->id, $user->name));
 
         return response()->json(['name' => $user->name]);
+    }
+
+    public function createGroup(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'contact_ids' => 'required|array|min:1',
+            'contact_ids.*' => 'exists:users,id'
+        ]);
+
+        $conversation = Conversation::create([
+            'name' => $request->name,
+            'is_group' => true,
+        ]);
+
+        // Adiciona o criador do grupo à conversa
+        $conversation->users()->attach(auth()->id());
+
+        // Adiciona os contatos selecionados à conversa
+        $conversation->users()->attach($request->contact_ids);
+
+        return response()->json(['message' => 'Grupo criado com sucesso', 'conversation' => $conversation]);
     }
 }

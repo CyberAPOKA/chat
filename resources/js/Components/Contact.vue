@@ -77,16 +77,16 @@ watch(() => form.phone, (newValue) => {
 <template>
     <div class="flex gap-4">
         <button @click="emit('back')">
-            <i class="pi pi-arrow-left"></i>
+            <i class="pi pi-arrow-left text-[--text-color]"></i>
         </button>
-        <h1>Novo contato</h1>
+        <h1 class="text-[--text-color]"> {{ $t('new_contact') }}</h1>
     </div>
     <div v-motion-slide-left class="mt-8">
         <form>
             <FloatLabel>
                 <InputMask v-model="form.phone" mask="+99 99 9 9999-9999" placeholder="+99 99 9 9999-9999" fluid
                     @change="form.validate('phone')" />
-                <InputLabel for="phone">Número</InputLabel>
+                <InputLabel for="phone">{{ $t('number') }}</InputLabel>
             </FloatLabel>
             <div v-if="userFound" class="flex flex-col items-center">
                 <div class="flex items-center gap-2 mt-3">
@@ -101,10 +101,10 @@ watch(() => form.phone, (newValue) => {
             </div>
         </form>
         <div v-if="userNotFound" class="text-red-500 mt-1">
-            Usuário não encontrado
+            {{ $t('user_not_found') }}
         </div>
         <div v-if="success" ref="target" class="bg-[--surface-800] text-green-500 p-2 mt-2 rounded-lg text-center">
-            Usuário adicionado
+            {{ $t('user_added') }}
         </div>
     </div>
 </template>

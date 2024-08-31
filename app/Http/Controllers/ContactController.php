@@ -60,7 +60,7 @@ class ContactController extends Controller
                     'id' => $contact->id,
                     'name' => $contact->name,
                     'phone' => $contact->phone,
-                    'profile_photo_url' => $contact->profile_photo_url,
+                    'profile_photo_path' => $contact->profile_photo_path,
                     'conversation_id' => optional($conversation)->id,
                 ];
             });

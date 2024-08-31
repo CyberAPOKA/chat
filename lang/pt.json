@@ -1,0 +1,15 @@
+{
+    "name": "Nome",
+    "new_group": "Novo Grupo",
+    "add_contact": "Adicionar Contato",
+    "to_send": "Enviar",
+    "contact_list": "Lista de Contatos",
+    "select_users": "Selecione os usuários para adicionar",
+    "create_group": "Criar Grupo",
+    "number": "Número",
+    "user_not_found": "Usuário não encontrado",
+    "user_added": "Usuário adicionado",
+    "chats": "Bate-Papos",
+    "new_conversation": "Nova conversa",
+    "search_number_or_name": "Pesquisar nome ou número"
+}
